@@ -16,174 +16,178 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
-      with:
-        go-version: '1.25.4'  # Specify the version of Go you want to use
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.25.4'  # Specify the version of Go you want to use
 
-    - name: Install Required Tools
-      run: |
-        rm -rf GarudReconBinary
+      - name: Clean old builds
+        run: rm -rf GarudReconBinary.zip
 
-        git clone --depth 1 https://github.com/rix4uni/gocl.git
-        cd gocl; go install
+      - name: Install gocl
+        run: go install github.com/rix4uni/gocl@latest
 
-        apt install zip
+      - name: Build binaries with gocl
+        run: |
+          gocl -l GarudReconBinary -i github.com/rix4uni/gobuild &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/httpx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hueristiq/xsubfind3r -c "cmd/xsubfind3r" &>/dev/null
+          gocl -l GarudReconBinary -i github.com/ThreatUnkown/jsubfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/nuclei &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/subfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/cvemap &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/katana &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/naabu &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/mapcidr &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/shuffledns &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/uncover &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/asnmap &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/cdncheck &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/dnsx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/chaos-client -c "cmd/chaos" &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/tldfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/alterx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/tlsx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/interactsh -c "cmd/interactsh-client" &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/notify &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/httprobe &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/assetfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/waybackurls &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/fff &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/meg &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/anew &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/gron &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/unfurl &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/gf &>/dev/null
+          gocl -l GarudReconBinary -i github.com/tomnomnom/qsreplace &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/subdog &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/oosexclude &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/emailextractor &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/nsfwdetector &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/querygen &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/haktrailsfree &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/org2asn &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/vulntechfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/sftpsender &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/wordcount &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/whoxysubs &>/dev/null
+          gocl -l GarudReconBinary -i github.com/dhn/udon &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/techfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/ip2org &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/certinfo &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/xsschecker &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/xssrecon &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/gosqli &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/portmap &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/tldscan &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/paramfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/Gxss &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/msarjun &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/socialfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/waybackurlsx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/originiphunter &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/hakrawler &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/hakrevdns &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/haklistgen &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/hakoriginfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/hakcheckurl &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/haktrails &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hakluke/hakip2host &>/dev/null
+          gocl -l GarudReconBinary -i github.com/ffuf/ffuf &>/dev/null
+          gocl -l GarudReconBinary -i github.com/sensepost/gowitness &>/dev/null
+          gocl -l GarudReconBinary -i github.com/gwen001/github-subdomains &>/dev/null
+          gocl -l GarudReconBinary -i github.com/incogbyte/shosubgo &>/dev/null
+          gocl -l GarudReconBinary -i github.com/lc/gau &>/dev/null
+          gocl -l GarudReconBinary -i github.com/lc/subjs &>/dev/null
+          gocl -l GarudReconBinary -i github.com/jaeles-project/gospider &>/dev/null
+          gocl -l GarudReconBinary -i github.com/jaeles-project/jaeles &>/dev/null
+          gocl -l GarudReconBinary -i github.com/003random/getJS &>/dev/null
+          gocl -l GarudReconBinary -i github.com/BishopFox/jsluice &>/dev/null
+          gocl -l GarudReconBinary -i github.com/bitquark/shortscan &>/dev/null
+          gocl -l GarudReconBinary -i github.com/g0ldencybersec/gungnir &>/dev/null
+          gocl -l GarudReconBinary -i github.com/sw33tLie/sns &>/dev/null
+          gocl -l GarudReconBinary -i github.com/d3mondev/puredns &>/dev/null
+          gocl -l GarudReconBinary -i github.com/bp0lr/dmut &>/dev/null
+          gocl -l GarudReconBinary -i github.com/OJ/gobuster &>/dev/null
+          gocl -l GarudReconBinary -i github.com/s0md3v/smap &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hahwul/dalfox &>/dev/null
+          gocl -l GarudReconBinary -i github.com/glebarez/cero &>/dev/null
+          gocl -l GarudReconBinary -i github.com/Josue87/gotator &>/dev/null
+          gocl -l GarudReconBinary -i github.com/Josue87/analyticsrelationships &>/dev/null
+          gocl -l GarudReconBinary -i github.com/MrEmpy/mantra &>/dev/null
+          gocl -l GarudReconBinary -i github.com/cemulus/crt &>/dev/null
+          gocl -l GarudReconBinary -i github.com/iamstoxe/urlgrab &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/GoLinkFinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/riza/linx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/Emoe/kxss &>/dev/null
+          gocl -l GarudReconBinary -i github.com/dwisiswant0/galer &>/dev/null
+          gocl -l GarudReconBinary -i github.com/kacakb/jsfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/Print3M/pathfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/cc1a2b/JShunter &>/dev/null
+          gocl -l GarudReconBinary -i github.com/x90skysn3k/brutespray &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/linkinspector &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/wordgen &>/dev/null
+          gocl -l GarudReconBinary -i github.com/musana/fuzzuli &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/bbpscraper &>/dev/null
+          gocl -l GarudReconBinary -i github.com/nyancrimew/goop &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/pvreplace &>/dev/null
+          gocl -l GarudReconBinary -i github.com/pwnesia/ssb &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/ftpx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/pwnesia/dnstake &>/dev/null
+          gocl -l GarudReconBinary -i github.com/musana/mx-takeover &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/subzy &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/timelimitx &>/dev/null
+          gocl -l GarudReconBinary -i github.com/denandz/sourcemapper &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/jscrawler &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/robotxt &>/dev/null
+          gocl -l GarudReconBinary -i github.com/Josue87/roboxtractor &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/pathcrawler &>/dev/null
+          gocl -l GarudReconBinary -i github.com/s0rg/crawley &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hueristiq/xcrawl3r &>/dev/null
+          gocl -l GarudReconBinary -i github.com/hueristiq/xurlfind3r &>/dev/null
+          gocl -l GarudReconBinary -i github.com/gwen001/github-endpoints &>/dev/null
+          gocl -l GarudReconBinary -i github.com/projectdiscovery/urlfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/edoardottt/cariddi &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/uforall &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/emailfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/edoardottt/favirecon &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/favinfo &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/dlevel &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/subdomainfuzz &>/dev/null
+          gocl -l GarudReconBinary -i github.com/trap-bytes/gourlex &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/cspfinder &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/dirless &>/dev/null
+          gocl -l GarudReconBinary -i github.com/edoardottt/csprecon &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/gitxpose &>/dev/null
+          gocl -l GarudReconBinary -i github.com/dhn/spk &>/dev/null
+          gocl -l GarudReconBinary -i github.com/rix4uni/ipfinder &>/dev/null
 
-    - name: Create GarudReconBinary
-      run: |
-        gocl -l GarudReconBinary -i github.com/rix4uni/gobuild &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/httpx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hueristiq/xsubfind3r -c "cmd/xsubfind3r" &>/dev/null
-        gocl -l GarudReconBinary -i github.com/ThreatUnkown/jsubfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/nuclei &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/subfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/cvemap &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/katana &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/naabu &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/mapcidr &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/shuffledns &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/uncover &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/asnmap &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/cdncheck &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/dnsx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/chaos-client -c "cmd/chaos" &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/tldfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/alterx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/tlsx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/interactsh -c "cmd/interactsh-client" &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/notify &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/httprobe &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/assetfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/waybackurls &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/fff &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/meg &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/anew &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/gron &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/unfurl &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/gf &>/dev/null
-        gocl -l GarudReconBinary -i github.com/tomnomnom/qsreplace &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/subdog &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/oosexclude &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/emailextractor &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/nsfwdetector &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/querygen &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/haktrailsfree &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/org2asn &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/vulntechfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/sftpsender &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/wordcount &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/whoxysubs &>/dev/null
-        gocl -l GarudReconBinary -i github.com/dhn/udon &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/techfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/ip2org &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/certinfo &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/xsschecker &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/xssrecon &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/gosqli &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/portmap &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/tldscan &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/paramfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/Gxss &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/msarjun &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/socialfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/waybackurlsx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/originiphunter &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/hakrawler &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/hakrevdns &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/haklistgen &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/hakoriginfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/hakcheckurl &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/haktrails &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hakluke/hakip2host &>/dev/null
-        gocl -l GarudReconBinary -i github.com/ffuf/ffuf &>/dev/null
-        gocl -l GarudReconBinary -i github.com/sensepost/gowitness &>/dev/null
-        gocl -l GarudReconBinary -i github.com/gwen001/github-subdomains &>/dev/null
-        gocl -l GarudReconBinary -i github.com/incogbyte/shosubgo &>/dev/null
-        gocl -l GarudReconBinary -i github.com/lc/gau &>/dev/null
-        gocl -l GarudReconBinary -i github.com/lc/subjs &>/dev/null
-        gocl -l GarudReconBinary -i github.com/jaeles-project/gospider &>/dev/null
-        gocl -l GarudReconBinary -i github.com/jaeles-project/jaeles &>/dev/null
-        gocl -l GarudReconBinary -i github.com/003random/getJS &>/dev/null
-        gocl -l GarudReconBinary -i github.com/BishopFox/jsluice &>/dev/null
-        gocl -l GarudReconBinary -i github.com/bitquark/shortscan &>/dev/null
-        gocl -l GarudReconBinary -i github.com/g0ldencybersec/gungnir &>/dev/null
-        gocl -l GarudReconBinary -i github.com/sw33tLie/sns &>/dev/null
-        gocl -l GarudReconBinary -i github.com/d3mondev/puredns &>/dev/null
-        gocl -l GarudReconBinary -i github.com/bp0lr/dmut &>/dev/null
-        gocl -l GarudReconBinary -i github.com/OJ/gobuster &>/dev/null
-        gocl -l GarudReconBinary -i github.com/s0md3v/smap &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hahwul/dalfox &>/dev/null
-        gocl -l GarudReconBinary -i github.com/glebarez/cero &>/dev/null
-        gocl -l GarudReconBinary -i github.com/Josue87/gotator &>/dev/null
-        gocl -l GarudReconBinary -i github.com/Josue87/analyticsrelationships &>/dev/null
-        gocl -l GarudReconBinary -i github.com/MrEmpy/mantra &>/dev/null
-        gocl -l GarudReconBinary -i github.com/cemulus/crt &>/dev/null
-        gocl -l GarudReconBinary -i github.com/iamstoxe/urlgrab &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/GoLinkFinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/riza/linx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/Emoe/kxss &>/dev/null
-        gocl -l GarudReconBinary -i github.com/dwisiswant0/galer &>/dev/null
-        gocl -l GarudReconBinary -i github.com/kacakb/jsfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/Print3M/pathfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/cc1a2b/JShunter &>/dev/null
-        gocl -l GarudReconBinary -i github.com/x90skysn3k/brutespray &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/linkinspector &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/wordgen &>/dev/null
-        gocl -l GarudReconBinary -i github.com/musana/fuzzuli &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/bbpscraper &>/dev/null
-        gocl -l GarudReconBinary -i github.com/nyancrimew/goop &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/pvreplace &>/dev/null
-        gocl -l GarudReconBinary -i github.com/pwnesia/ssb &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/ftpx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/pwnesia/dnstake &>/dev/null
-        gocl -l GarudReconBinary -i github.com/musana/mx-takeover &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/subzy &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/timelimitx &>/dev/null
-        gocl -l GarudReconBinary -i github.com/denandz/sourcemapper &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/jscrawler &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/robotxt &>/dev/null
-        gocl -l GarudReconBinary -i github.com/Josue87/roboxtractor &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/pathcrawler &>/dev/null
-        gocl -l GarudReconBinary -i github.com/s0rg/crawley &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hueristiq/xcrawl3r &>/dev/null
-        gocl -l GarudReconBinary -i github.com/hueristiq/xurlfind3r &>/dev/null
-        gocl -l GarudReconBinary -i github.com/gwen001/github-endpoints &>/dev/null
-        gocl -l GarudReconBinary -i github.com/projectdiscovery/urlfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/edoardottt/cariddi &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/uforall &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/emailfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/edoardottt/favirecon &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/favinfo &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/dlevel &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/subdomainfuzz &>/dev/null
-        gocl -l GarudReconBinary -i github.com/trap-bytes/gourlex &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/cspfinder &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/dirless &>/dev/null
-        gocl -l GarudReconBinary -i github.com/edoardottt/csprecon &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/gitxpose &>/dev/null
-        gocl -l GarudReconBinary -i github.com/dhn/spk &>/dev/null
-        gocl -l GarudReconBinary -i github.com/rix4uni/ipfinder &>/dev/null
+      - name: Create zip archive using Go (no apt needed)
+        run: |
+          go install github.com/klauspost/compress/zip@latest
+          zipcli -o GarudReconBinary.zip GarudReconBinary/*
+        env:
+          # Make zipcli available
+          PATH: ${{ env.HOME }}/go/bin:$PATH
 
-    - name: Create Zip for GarudReconBinary
-      run: |
-        zip -r GarudReconBinary.zip GarudReconBinary
+      - name: Clean old builds
+        run: rm -rf GarudReconBinary
 
-    - name: Commit and push changes if there are any
-      run: |
-        git config --global user.name 'GitHub Actions'
-        git config --global user.email 'actions@users.noreply.github.com'
-        git add .
-        
-        # Check if there are changes before committing
-        if ! git diff --cached --exit-code; then
-          IST_DATE=$(TZ='Asia/Kolkata' date +'%a %b %d %H:%M:%S IST %Y')
-          git commit -m "Updated List: $IST_DATE"
-          git push
-        else
-          echo "No changes to commit"
+      - name: Commit and push changes if there are any
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@users.noreply.github.com'
+          git add .
+          
+          # Check if there are changes before committing
+          if ! git diff --cached --exit-code; then
+            IST_DATE=$(TZ='Asia/Kolkata' date +'%a %b %d %H:%M:%S IST %Y')
+            git commit -m "Auto-update GarudReconBinary - $IST_DATE"
+            git push
+          else
+            echo "No changes to commit"
 
-        fi
+          fi
