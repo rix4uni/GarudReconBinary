@@ -28,7 +28,7 @@ jobs:
       run: |
         rm -rf GarudReconBinary
 
-        git clone --depth 1 github.com/rix4uni/gocl.git
+        git clone --depth 1 https://github.com/rix4uni/gocl.git
         cd gocl; go install
 
         apt install zip
@@ -185,4 +185,5 @@ jobs:
           git push
         else
           echo "No changes to commit"
+
         fi
