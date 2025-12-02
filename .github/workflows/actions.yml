@@ -167,13 +167,9 @@ jobs:
           gocl -l GarudReconBinary -i github.com/dhn/spk &>/dev/null
           gocl -l GarudReconBinary -i github.com/rix4uni/ipfinder &>/dev/null
 
-      - name: Create zip archive using Go (no apt needed)
+      - name: Create Zip for GarudReconBinary
         run: |
-          go install github.com/klauspost/compress/zip@latest
-          zipcli -o GarudReconBinary.zip GarudReconBinary/*
-        env:
-          # Make zipcli available
-          PATH: ${{ env.HOME }}/go/bin:$PATH
+          zip -r GarudReconBinary.zip GarudReconBinary
 
       - name: Clean old builds
         run: rm -rf GarudReconBinary
@@ -193,4 +189,5 @@ jobs:
             echo "No changes to commit"
 
           fi
+
 
