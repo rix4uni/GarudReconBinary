@@ -24,7 +24,7 @@ jobs:
         with:
           go-version: '1.25.4'  # Specify the version of Go you want to use
 
-      - name: Clean old builds
+      - name: Clean old builzipds
         run: rm -rf GarudReconBinary.zip
 
       - name: Install gocl
@@ -171,23 +171,12 @@ jobs:
         run: |
           zip -r GarudReconBinary.zip GarudReconBinary
 
-      - name: Clean old builds
+      - name: Clean folder
         run: rm -rf GarudReconBinary
 
-      - name: Commit and push changes if there are any
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@users.noreply.github.com'
-          git add .
-          
-          # Check if there are changes before committing
-          if ! git diff --cached --exit-code; then
-            IST_DATE=$(TZ='Asia/Kolkata' date +'%a %b %d %H:%M:%S IST %Y')
-            git commit -m "Auto-update GarudReconBinary - $IST_DATE"
-            git push
-          else
-            echo "No changes to commit"
-
-          fi
-
-
+      - name: Upload Nightly Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: nightly
+          name: Nightly Build
+          files: GarudReconBinary.zip
