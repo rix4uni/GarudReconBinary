@@ -28,7 +28,9 @@ jobs:
         run: rm -rf GarudReconBinary.zip
 
       - name: Install gocl
-        run: go install github.com/rix4uni/gocl@latest
+        run: |
+          git clone --depth 1 https://github.com/rix4uni/gocl.git
+          cd gocl; go install
 
       - name: Build binaries with gocl
         run: |
@@ -191,3 +193,4 @@ jobs:
             echo "No changes to commit"
 
           fi
+
