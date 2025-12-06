@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
+	"os/user"
 	"path/filepath"
 	"strings"
 
@@ -24,6 +26,7 @@ type CopyStats struct {
 func main() {
 	copyFlag := pflag.BoolP("copy", "c", false, "Copy tools from locations in tools.json to GarudReconBinary directory and create zip")
 	pasteFlag := pflag.BoolP("paste", "p", false, "Unzip GarudReconBinary.zip and move files to locations specified in tools.json")
+	configFlag := pflag.StringP("config", "", "", "Custom path to tools.json file (default: ~/.config/GarudReconBinary/tools.json)")
 	pflag.Parse()
 
 	if !*copyFlag && !*pasteFlag {
@@ -31,6 +34,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Usage:\n")
 		fmt.Fprintf(os.Stderr, "  %s -c, --copy   Copy tools and create zip\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "  %s -p, --paste  Unzip and move tools to destinations\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "  %s --config     Custom path to tools.json\n", os.Args[0])
 		os.Exit(1)
 	}
 
@@ -39,17 +43,39 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Determine config file path
+	configPath := *configFlag
+	if configPath == "" {
+		var err error
+		configPath, err = getDefaultConfigPath()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error getting default config path: %v\n", err)
+			os.Exit(1)
+		}
+	}
+
+	// Download tools.json if it doesn't exist
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		fmt.Printf("tools.json not found at %s\n", configPath)
+		fmt.Println("Downloading tools.json from GitHub...")
+		if err := downloadToolsConfig(configPath); err != nil {
+			fmt.Fprintf(os.Stderr, "Error downloading tools.json: %v\n", err)
+			os.Exit(1)
+		}
+		fmt.Printf("Successfully downloaded tools.json to %s\n", configPath)
+	}
+
 	if *copyFlag {
-		runCopy()
+		runCopy(configPath)
 	} else if *pasteFlag {
-		runPaste()
+		runPaste(configPath)
 	}
 }
 
 // runCopy handles the --copy flag functionality
-func runCopy() {
+func runCopy(configPath string) {
 	// Read tools.json
-	config, err := readToolsConfig("tools.json")
+	config, err := readToolsConfig(configPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading tools.json: %v\n", err)
 		os.Exit(1)
@@ -158,7 +184,7 @@ func runCopy() {
 }
 
 // runPaste handles the --paste flag functionality
-func runPaste() {
+func runPaste(configPath string) {
 	// Get current working directory
 	workDir, err := os.Getwd()
 	if err != nil {
@@ -174,7 +200,7 @@ func runPaste() {
 	}
 
 	// Read tools.json
-	config, err := readToolsConfig("tools.json")
+	config, err := readToolsConfig(configPath)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading tools.json: %v\n", err)
 		os.Exit(1)
@@ -565,4 +591,54 @@ func extractDirectoriesFromConfig(config ToolConfig) []string {
 	}
 
 	return dirs
+}
+
+// getDefaultConfigPath returns the default path for tools.json
+// ~/.config/GarudReconBinary/tools.json
+func getDefaultConfigPath() (string, error) {
+	usr, err := user.Current()
+	if err != nil {
+		return "", fmt.Errorf("failed to get current user: %w", err)
+	}
+
+	configDir := filepath.Join(usr.HomeDir, ".config", "GarudReconBinary")
+	configPath := filepath.Join(configDir, "tools.json")
+
+	return configPath, nil
+}
+
+// downloadToolsConfig downloads tools.json from GitHub and saves it to the specified path
+func downloadToolsConfig(configPath string) error {
+	// Create directory if it doesn't exist
+	configDir := filepath.Dir(configPath)
+	if err := os.MkdirAll(configDir, 0755); err != nil {
+		return fmt.Errorf("failed to create config directory: %w", err)
+	}
+
+	// Download from GitHub
+	url := "https://raw.githubusercontent.com/rix4uni/GarudReconBinary/refs/heads/main/tools.json"
+	resp, err := http.Get(url)
+	if err != nil {
+		return fmt.Errorf("failed to download tools.json: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("failed to download tools.json: HTTP %d", resp.StatusCode)
+	}
+
+	// Create the file
+	outFile, err := os.Create(configPath)
+	if err != nil {
+		return fmt.Errorf("failed to create config file: %w", err)
+	}
+	defer outFile.Close()
+
+	// Write the body to file
+	_, err = io.Copy(outFile, resp.Body)
+	if err != nil {
+		return fmt.Errorf("failed to write config file: %w", err)
+	}
+
+	return nil
 }
